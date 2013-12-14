@@ -1,0 +1,21 @@
+<br>
+
+	
+		<div style="display:inline-block;">
+			<p>I know, where are you, my darling</p>
+    		<input type="text" class="form-control" style="width:104px;display:inline-block;" 
+    		ng-model="coordinates.latitude" placeholder="latitude">
+    		<input type="text" class="form-control" style="width:104px;display:inline-block;" 
+    		ng-model="coordinates.longitude" placeholder="longitude">
+		</div>
+		<div 
+		style="border:1px solid #888;border-radius:100px;text-align:center;padding:20px 0;width:60px;float:right">
+			<small>r:250m</small>
+		</div>
+		<br>
+		<br>
+		<button type="button" class="btn btn-success" ng-click="exploreThisBlock()">Explore</button>				
+		<input type="text" class="form-control" style="width:104px;display:inline-block;" ng-model="place" placeholder="Place Name" ng-show="blockPlacesList">
+		<h4>List of BlockPlaces</h4>		
+		{{blockPlacesList}}
+

@@ -1,0 +1,44 @@
+<div class="container">
+	<div class="bs-docs-example">
+        <div class="row">
+        	<div class="col-md-6 col-md-push-3">
+        		<div class="row">
+        			<div>
+		                <select class="form-control" style="margin:0" 
+		                	ng-model="category" ng-options="c.name for c in categories" >
+		                    <option value="" >Любая категория</option>
+		                </select>
+		            </div>
+		            <div class="btn-group btn-group-justified" data-toggle="buttons"  style="margin-top:10px">
+						<label class="btn btn-default" 
+							ng-click="setRadius(250)" ng-class="{'active':250==radiusActive}">
+							<input type="radio" name="options" id="250"> 250m
+						</label>
+						<label class="btn btn-default"
+							ng-click="setRadius(1000)" ng-class="{'active':1000==radiusActive}">
+							<input type="radio" name="options" id="1000"> 1km
+						</label>
+						<label class="btn btn-default"
+							ng-click="setRadius(3000)" ng-class="{'active':3000==radiusActive}">
+							<input type="radio" name="options" id="3000"> 3km
+						</label>
+						<label class="btn btn-default"
+							ng-click="setRadius(0)" ng-class="{'active':0==radiusActive}">
+							<input type="radio" name="options" id="city"> city
+						</label>
+					</div>
+        		</div> 
+        		<div class="row" style="margin:15px 0">
+        			{{feed.results}}
+        		</div>       		
+        		<div class="row">
+        			<button type="button" class="btn btn-primary btn-lg btn-block" ng-click="loadMorePlaces ()">
+        				<i class="icon-circle"></i>
+		                <i class="icon-circle"></i>
+		                <i class="icon-circle"></i>
+        			</button>
+        		</div>       		
+        	</div>            
+        </div>
+    </div>
+</div>

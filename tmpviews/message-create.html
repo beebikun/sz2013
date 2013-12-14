@@ -1,0 +1,40 @@
+<div class="container">
+	<div class="bs-docs-example">
+        <div class="row">
+            <h1>Stage 1</h1>
+            <div class="row">
+                <h4>Request</h4>        
+                <form role="form" class="col-md-4 col-md-push-4">
+                    <div class="form-group">
+                        <label >Text</label>
+                        <textarea class="form-control" rows="4" placeholder="Some text here.." ng-model="text" ></textarea>
+                    </div>                        
+                    <div class="form-group">
+                        <input type="file" name="photo" sz-file-model="photo">                    
+                    </div>  
+                    <div class="form-group" style="text-align:center;display:none" id="photoBigCont">
+                        <div  style="max-width:300px;display:inline-block">
+                            <div>
+                                <div style="float:left;margin-right:5px;"><i class="icon-remove icon-2x" style="cursor:pointer" ng-click="remove()"></i></div>
+                                <p style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-top:3px;font-weight:bold">
+                                    <span id="photoPrevName"></span>
+                                </p>
+                            </div>
+                            <div  id="photoPrev">                                                        
+                            </div>
+                        </div>      
+                    </div>
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-success btn-lg btn-block" ng-click="send()">Send</a>
+                        <a class="btn btn-primary btn-lg btn-block" ng-click="next()">Next</a>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <h4>Response</h4>
+                {{response}}
+            </div>
+        </div>
+        
+    </div>
+</div>

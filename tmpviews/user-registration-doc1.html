@@ -1,0 +1,144 @@
+<br>
+<ul id="myTab2" class="nav nav-pills">
+<li class="active"><a href="#doc1scheme" data-toggle="pill">
+    	SCHEME
+	</a></li>
+    <li><a href="#doc1data" data-toggle="pill">
+    	DATA
+	</a></li>
+</ul>	
+<div id="myTab2Content" class="tab-content">
+	<div class="tab-pane fade" id="doc1data">
+		<blockquote>	            	
+			<dl class="dl-horizontal" style="margin-top:0">
+				<dt>email</dt>
+				<dd>serializers.EmailField(required=True)</dd>
+			    <dt>password1</dt>
+				<dd>serializers.CharField(required=True)</dd>
+				<dt>password2</dt>
+				<dd>serializers.CharField(required=True)</dd>
+				<dt>race</dt>
+				<dd>serializers.ChoiceField(required=True, choices=[(race.pk, race.name) for race in models.Races.objects.all()])</dd>
+				<dt>gender</dt>
+				<dd>serializers.ChoiceField(required=True, choices=[(gender.pk, gender.name) for gender in models.Gender.objects.all()])</dd>
+			</dl>
+			<small>POSTDATA from Client POST</small>			
+		</blockquote>
+	</div>
+	<div class="tab-pane fade in active" id="doc1scheme" style="text-align:center;">
+		<div style="width:225px;display:inline-block;position:static;">
+
+			<div class="panel panel-info" style="margin:0;">
+				<div class="panel-heading" style="padding:5px">
+					<h3 class="panel-title">
+						sz.urls
+					</h3>
+				</div>
+				<div class="panel-body" style="padding:0">
+				    <p style="margin:5px">
+				    	/r'^api/'
+			    	</p>			    	
+		    		<div class="btn-group btn-group-justified">
+					    <a class="btn btn-link "><span class="text-muted"><em>include('sz.api.urls')</em></span></a>
+				    </div>
+				</div>
+			</div>			
+			<i class="icon-long-arrow-down icon-2x" style="color:#666"></i>
+			<div class="panel panel-default" style="margin:0;border-color:#666">
+				<div class="panel-heading" style="padding:5px">
+					<h3 class="panel-title">
+						sz.api.urls
+					</h3>
+				</div>
+				<div class="panel-body" style="padding:0">
+				    <p style="margin:5px">
+				    	api/usr/register
+			    	</p>
+				</div>
+			</div>			
+			<i class="icon-long-arrow-down icon-2x" style="color:#666"></i>
+			<div class="panel panel-default" style="margin:0;border-color:#666">
+				<div class="panel-heading" style="padding:5px">
+					<h3 class="panel-title">
+						sz.api.views.users
+					</h3>
+				</div>
+				<div class="panel-body" style="padding:0">
+				    <p style="margin:5px">
+				    	UserRoot
+			    	</p>
+				</div>
+			</div>			
+			<i class="icon-long-arrow-down icon-2x" style="color:#666"></i>
+			<div class="panel panel-default" style="margin:0;border-color:#666">
+				<div class="panel-heading" style="padding:5px">
+					<h3 class="panel-title">
+						sz.api.serializers
+					</h3>
+				</div>
+				<div class="panel-body" style="padding:0">
+				    <p style="margin:5px">
+				    	RegistrationSerializer
+			    	</p>
+			    	<div class="btn-group btn-group-justified">
+					    <a class="btn btn-link "><span class="text-danger">err400</span></a>
+		    			<a class="btn btn-link"><span class="text-success">{USER}</span></a>
+				    </div>
+				</div>
+			</div>			
+			<i class="icon-long-arrow-down icon-2x" style="color:#666;margin-right:-110px"></i>
+			<div class="panel panel-default" style="margin:0;border-color:#666">
+				<div class="panel-heading" style="padding:5px">
+					<h3 class="panel-title">
+						sz.api.views.users
+					</h3>
+				</div>
+				<div class="panel-body" style="padding:0">
+				    <p style="margin:5px">
+				    	UserRoot
+			    	</p>
+				</div>
+			</div>			
+			<i class="icon-long-arrow-down icon-2x" style="color:#666;"></i>
+			<div class="panel panel-default" style="margin:0;border-color:#666">
+				<div class="panel-heading" style="padding:5px">
+					<h3 class="panel-title">
+						sz.api.serializers
+					</h3>
+				</div>
+				<div class="panel-body" style="padding:0">
+				    <p style="margin:5px">
+				    	AuthUserSerializer
+			    	</p>
+			    	<div class="btn-group btn-group-justified">
+		    			<a class="btn btn-link"><span class="text-success">user_data</span></a>
+				    </div>
+				</div>
+			</div>			
+			<i class="icon-long-arrow-down icon-2x" style="color:#666;"></i>
+			<div class="panel panel-default" style="margin:0;border-color:#666">
+				<div class="panel-heading" style="padding:5px">
+					<h3 class="panel-title">
+						sz.api.views.users
+					</h3>
+				</div>
+				<div class="panel-body" style="padding:0">
+				    <p style="margin:5px">
+				    	UserRoot
+			    	</p>
+			    	<div class="btn-group btn-group-justified">
+		    			<a class="btn btn-link"><span class="text-success">META:200,DATA:USER_DATA</span></a>
+				    </div>
+				</div>
+			</div>			
+			<i class="icon-long-arrow-down icon-2x" style="color:#666;"></i>
+			<h3 style="margin-top:0"><span class="label label-success">END</span></h3>
+			</div>	
+
+		</div>
+	            
+
+</div>
+<div > 
+    
+</div>

@@ -1,0 +1,32 @@
+<div class="container">
+	<div class="row">
+	<p>{{preview}}</p>
+        <h1>Stage 2</h1>
+        <div id="forTest" style="background:green;width:50px;height:50px;margin-top:20px"></div>
+        <div class="row">
+            <h4>Request</h4>
+            <div class="col-md-4 col-md-push-4" >
+                <div class="btn-group btn-group-justified" data-toggle="buttons">
+                    <label class="btn btn-default active" ng-click="action=1" style="border-radius:5px 0 0 0">
+                        <input type="radio" name="options" id="optionDraw"> 1
+                    </label>
+                    <label class="btn btn-default" ng-click="action=0" style="border-radius:0 5px 0 0">
+                        <input type="radio" name="options" id="optionErase"> 0
+                    </label>                        
+                </div>    
+                <div>
+                    <img src="{{photoSrc}}" sz-draw-faces="" style="max-width:100%;display:inline-block" id="photo">
+                </div>
+                <button class="btn btn-success btn-lg btn-block" ng-click="send()" style="border-radius:0 0 5px 5px">Send</button>
+            </div>
+        </div>
+        <div class="row">            
+            <h4>Response</h4>            
+            <p>Thumb</p>
+            <img src="{{response.photo.thumbnail}}" style="max-width:100%;display:inline-block">
+            <p>Full</p>
+            <img src="{{response.photo.full}}" style="max-width:100%;display:inline-block">
+            <p>{{response}}</p>
+        </div>
+    </div>
+</div>

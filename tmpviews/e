@@ -1,0 +1,42 @@
+<head>
+    <title>SZ</title>
+	<script src="/../../client/app/js/libs/jquery/jquery-1.9.1.min.js"></script>
+	<script src="/../../client/app/css/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="/../../client/app/css/bootstrap/css/bootstrap.css">        
+    <link rel="stylesheet" href="/../../client/app/css/FortAwesome-Font-Awesome-13d5dd3/css/font-awesome.min.css">
+    <script type="text/javascript" >
+        $(document).ready(function(){
+            });
+    </script>
+</head>
+<body>
+    <div class="hero-unit">
+		<a class="btn btn-primary pull-right" href="/api">API</a>
+	    <h1>ShmotZhmot</h1>
+		    <p>System testing</p>
+		    <ul class="nav nav-pills">
+		    	<li>
+		    		<a href="/tmp-views" style="color:#444">
+		    			<i class="icon-arrow-left icon-2x"></i>
+		    		</a>	
+		    	</li>
+		    </ul>
+    </div>
+    <div class="container">
+    	<ul id="myTab" class="nav nav-tabs">
+            <li class="active"><a href="#tasks" data-toggle="tab">
+            	<i class="icon-cog icon-2x"></i>
+        	</a></li>
+            <li><a href="#example" data-toggle="tab">
+            	<i class="icon-tasks icon-2x"></i>
+        	</a></li>
+        </ul>
+            <div id="myTabContent" class="tab-content">
+            	<div class="tab-pane fade in active" id="tasks">
+                	<p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+            	</div>
+            	<div class="tab-pane fade" id="example">
+                	<p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+            	</div>              
+            </div>
+    </div>

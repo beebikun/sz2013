@@ -1,0 +1,91 @@
+a{color:#34495e; }
+a:hover{color:#444; }
+body{
+	text-align: center;
+}
+.container{
+	width: auto; 	
+	text-align: left;
+}
+header img{
+	margin-right:10px;
+}
+header h1{
+	padding-top: 5px;
+	/*font-family: 'Muli', sans-serif;*/
+	font-family: 'Arbutus', cursive;
+}
+h3{
+	font-family: 'Muli', sans-serif;
+}
+.nav-tabs{
+	height: 42px;
+}
+.tab-content{
+	padding: 10px 10px;
+	padding-bottom: 0;
+}
+.margin-bottom-sm{
+	margin-bottom: 5px;
+}
+header{
+	margin-bottom: 10px;
+	border-bottom: 2px solid;
+}
+#wrap{
+	display: inline-block;
+	text-align: justify;
+}
+
+#top{
+	margin-bottom: 10px;
+}
+
+#canwasWrapper{
+	width: 1020px;
+	overflow: auto;
+	display: inline-block;
+}
+
+#startBtn{
+	width: 200px;
+}
+#canwasWrapper, #panelObj{
+	height: 400px;
+	/*overflow: auto;*/
+	overflow: hidden;
+}
+#panelObj{
+	margin-left: 5px;
+	display: inline-block;
+	width: 310px;	
+	vertical-align: top;	
+}
+.obj-list>.active>a{
+	text-decoration: underline;
+	color:#d35400;
+}
+.tower-items{
+	cursor: pointer;
+}
+
+.obj-new{
+	display: none;
+}
+
+#serverLog{
+	min-height: 100px;
+	border-top: 2px solid;	
+}
+#serverLog .server span:first-child{
+	color:#d35400;
+	margin-right: 47px;
+}
+#serverLog .client span:first-child{
+	color:#27ae60;
+	margin-right: 53px;
+}
+#serverLog .server-bl span:first-child{
+	color:#8e44ad;
+	margin-right: 10px;
+}

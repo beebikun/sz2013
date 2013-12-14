@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html ng-app="sz.client">
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="Lebowski" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}libs/bootstrap-3.0.0/bootstrap/css/bootstrap.min.css">        
+    <link rel="stylesheet" href="{{ STATIC_URL }}libs/font-awesome-4.0.1/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Arbutus' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+    <link rel="icon" type="image/png" href="{{ STATIC_URL }}lebowski/favicon.png" />
+	<link rel="stylesheet" href="{{ STATIC_URL }}lebowski/style.css">
+    <title>Lebowski</title>
+</head>
+<body>
+	<header>
+		<div class="container">
+			<img src="{{ STATIC_URL }}lebowski/lebowski.jpg" class="img-responsive pull-left">
+	  		<h1>Big Lebowski
+	  		<!-- <button class="btn btn-success btn-lg" style="margin-top:-20px;margin-left:200px;" id="startBtn">Начать</button> -->
+	  		</h1> 
+		</div>
+	</header>
+	<div id="wrap">
+		<div id="top">
+			<div id="canwasWrapper">
+				<h3>Map</h3>
+				<canvas id="canvas"></canvas>
+			</div>
+			<div id="panelObj">
+				<h3>Settings</h3>
+<ul id="objectsTab" class="nav nav-tabs">
+	<li class="active"><a href="#places" data-toggle="tab">Places</a></li>
+	<li class=""><a href="#users" data-toggle="tab">Users</a></li>
+</ul>
+<div id="objectsTabContent" class="tab-content">
+	<div class="tab-pane fade active in" id="places">		
+		<div class="obj-detail">
+			<div class="obj-detail-name"></div>
+			<div class="obj-detail-coordinates"></div>
+		</div>
+		<div class="obj-list">
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="Search place" name="searchPlace">
+			</div>
+		</div>
+	</div>
+	<div class="tab-pane fade" id="users">
+		<div class="text-center obj-create-btn">
+			<button type="button" class="btn btn-default">Создать</button>
+		</div>
+		<div class="obj-new">
+			<div class="form-group">
+			    <input type="text" class="form-control  margin-bottom-sm" placeholder="User id" disabled>
+			    <input type="text" class="form-control  margin-bottom-sm" placeholder="User email">
+			    <input type="text" class="form-control  margin-bottom-sm" placeholder="User gender">
+			    <select class="form-control  margin-bottom-sm">
+			    	<option val="1">U</option>
+			    	<option val="2">M</option>
+			    	<option val="3">F</option>
+			    </select>
+			    <select class="form-control" >
+			    	<option val="1">futuri</option>
+			    	<option val="2">amadeus</option>
+			    	<option val="3">united</option>
+			    </select>
+			</div>
+			<div class="form-group">
+                <button type="button" class="btn btn-default" onclick='hideObjNew(this)'>
+                  <i class="fa fa-times fa-2x"></i>
+                </button>
+                <button type="button" class="btn btn-default pull-right"  onclick='hideObjNew(this, true)'>
+                  <i class="fa fa-check fa-2x"></i>
+                </button>
+			</div>
+		</div>
+	</div>	
+</div>
+
+			</div>		
+		</div>
+		<div id="serverLog">
+			<h3>Log</h3>
+			<div id="serverLogInner">				
+				<p class="server"><span>Server say:</span><span>Nothing</span></p>
+				<p class="client"><span>Client say:</span><span>Nothing</span></p>
+				<p class="server-bl"><span>BigLebowski say:</span><span>Nothing</span></p>
+			</div>
+		</div>		
+	</div>
+
+
+	<script src="{{ STATIC_URL }}lebowski/usernameslist.js"></script>
+	<script src="{{ STATIC_URL }}lebowski/placesnameslist.js"></script>
+	<script src="{{ STATIC_URL }}libs/jquery/jquery-1.9.1.min.js"></script>
+	<script src="{{ STATIC_URL }}libs/bootstrap-3.0.0/bootstrap/js/bootstrap.min.js"></script>
+	<script src="{{ STATIC_URL }}lebowski/helpers.js"></script>
+	<script src="{{ STATIC_URL }}lebowski/resources.js"></script>
+	<script src="{{ STATIC_URL }}lebowski/sprite.js"></script>
+	<script src="{{ STATIC_URL }}lebowski/tower.js"></script>
+	<script src="{{ STATIC_URL }}lebowski/app.js"></script>
+	<script src="{{ STATIC_URL }}lebowski/script.js"></script>
+</body>

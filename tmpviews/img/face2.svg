@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200px" height="200px" viewBox="0 0 200 200">
+    <circle cx="102" cy="102" r="80" style="fill:#333" />
+    <circle cx="100" cy="100" r="80" style="fill:#00aad4" />
+    <circle cx="100" cy="100" r="65" style="fill:#eee" />
+    <text x="40" y="110" style="font-size:22px;fill:#000000;font-family:Segoe UI;" >Don`t STOP!</text>
+</svg>

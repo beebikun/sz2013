@@ -1,0 +1,81 @@
+<br>
+<div class="row">
+	<div class="col-md-5">
+		<div class="panel panel-default">
+			<div class="panel-heading"><h4>Request</h4></div>
+			<div class="panel-body">
+				<form class="form-horizontal" role="form">    	   		
+				    <div class="form-group">
+				    	<label class="col-lg-4 control-label" for="inputEmail">email</label>
+					    <div class="col-lg-8">
+					      <input type="email" class="form-control" id="inputEmail" ng-model="user.email">
+					    </div>
+				    </div>
+				    <div class="form-group">
+				    	<label class="col-lg-4 control-label" for="password1">password1</label>
+					    <div class="col-lg-8">
+					    	<input type="text" class="form-control" id="password1" ng-model="user.password1">
+					    </div>
+				    </div>
+				    <div class="form-group">
+				    	<label class="col-lg-4 control-label" for="password2">password2</label>
+					    <div class="col-lg-8">
+					    	<input type="text" class="form-control" id="password2" ng-model="user.password1">
+					    </div>
+				    </div>
+				    <div class="form-group">
+				    	<label class="col-lg-4 control-label">gender</label>
+					    <div class="col-lg-8">
+				    	    <div class="btn-group btn-group-justified" data-toggle="buttons">
+							    <label class="btn btn-default active">
+									<input type="radio" name="options" id="option1" ng-click="user.gender=1">1
+								</label>
+							    <label class="btn btn-default">
+									<input type="radio" name="options" id="option1" ng-click="user.gender=2">2
+								</label>
+							    <label class="btn btn-default">
+									<input type="radio" name="options" id="option1" ng-click="user.gender=3">3
+								</label>
+						    </div>
+					    </div>					    
+				    </div>
+				    <div class="form-group">
+				    	<label class="col-lg-4 control-label">race</label>
+					    <div class="col-lg-8">
+				    	    <div class="btn-group btn-group-justified" data-toggle="buttons">
+							    <label class="btn btn-default active">
+									<input type="radio" name="options" id="option1" ng-click="user.race=1">1
+								</label>
+							    <label class="btn btn-default">
+									<input type="radio" name="options" id="option1" ng-click="user.race=2">2
+								</label>
+							    <label class="btn btn-default">
+									<input type="radio" name="options" id="option1" ng-click="user.race=3">3
+								</label>
+						    </div>
+					    </div>					    
+				    </div>
+				    <div class="form-group">
+				    	<div class="col-md-10 col-md-push-1">
+				    	    <div class="btn-group btn-group-justified">
+							    <a class="btn btn-success btn-lg" ng-click="registration()">Create</a>
+				    			<a class="btn btn-warning btn-lg" ng-click="confirmation()">Get a key</a>
+						    </div>
+					    </div>		
+					</div>		
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading"><h4>Response</h4></div>
+			<div class="panel-body">
+				<strong>Data</strong>
+				<p>{{response}}</p>
+				<strong>Key</strong>
+				<a href="../activate/{{key.key}}"><p>{{key.key}}</p></a>
+			</div>
+		</div>
+	</div>
+</div>
