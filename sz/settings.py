@@ -15,18 +15,18 @@ AUTH_USER_MODEL = 'core.User'
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        #'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'test',#SZ_ROOT + 'data/sz.db3', # Or path to database file if using sqlite3.
-        'USER': 'test', # Not used with sqlite3.
-        'PASSWORD': '123', # Not used with sqlite3.
-        'HOST': '1.1.1.1', # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '', # Set to empty string for default. Not used with sqlite3.
-    }
-}
+# DATABASES = {
+#     'default': {
+#         #'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
+#         # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'test',#SZ_ROOT + 'data/sz.db3', # Or path to database file if using sqlite3.
+#         'USER': 'test', # Not used with sqlite3.
+#         'PASSWORD': '123', # Not used with sqlite3.
+#         'HOST': '1.1.1.1', # Set to empty string for localhost. Not used with sqlite3.
+#         'PORT': '', # Set to empty string for default. Not used with sqlite3.
+#     }
+# }
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
@@ -88,9 +88,6 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'p)%%6e&zzst&c(k)z4fwx@0=&4-q=p3zuyv0yo@8%6_jv%1$y*'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
