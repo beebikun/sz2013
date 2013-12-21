@@ -13,6 +13,11 @@
     <title>Lebowski - User Activity Generator</title>
 </head>
 <body>
+{% csrf_token %}
+	<section id="screen-overflow"> 
+		<h1>Load API</h1>
+		<i class="fa fa-spinner fa-spin fa-4x"></i>
+	</section>
     <div class="modal fade" id="modalNewUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -174,6 +179,7 @@
         </div>
     </section>
 
+    
 
 <script type="text/javascript">
 function get_random_num(max, min){
@@ -199,20 +205,26 @@ function get_box_width(){BOX_WIDTH = Math.floor(document.getElementById("map").g
 function get_box_height(){BOX_HEIGHT = Math.floor(document.getElementById("map").getBoundingClientRect().height/BOX_VALUE); }
 var BOX_STEP = MAX_POSITION/BOX_VALUE;
 
-var RACES_LIST = [['futuri',1],['united',2],['amadeus', 3]];
-var GENDERS_LIST = [['f', 1], ['m', 2], ['u', 3]]
-var AUTORS_LIST = [{cls:'bl',name:'BigLebowski'},{cls:'client',name:'Client'}, {cls:'sz',name:'SZ'}];
+var AUTORS_LIST = [
+	{cls:'client-sz',name:'Client', to:'SZ'},
+	{cls:'sz-bl',name:'SZ',to:'BigLebowski'},
+	{cls:'bl',name:'BigLebowski', to:'SZ'},
+	{cls:'sz-client',name:'SZ',to:'Client'},
+	{cls:'client',name:'Client', to:'You'},
+];
 var COLOR_LIST = ['red', 'blue', 'green', 'gray', '#16a085', '#27ae60', '#2980b9', '#8e44ad', '#2c3e50', '#f1c40f', '#f39c12', '#d35400', 'yellow', 'white', '#c0392b', '#e74c3c', '#7f8c8d']
 
-var API_IP = '192.168.0.101:8080';
+var PLACES_LIST = new Array;
+var RACES_LIST = new Array;
+var GENDERS_LIST = new Array;
 var API;
+var CSRF;
 
 </script>	
 	<script src="{{ STATIC_URL }}libs/jquery/jquery-1.9.1.min.js"></script>
 	<script src="{{ STATIC_URL }}libs/jquery/jquery.tinyscrollbar.min.js"></script>
 	<script src="{{ STATIC_URL }}libs/bootstrap-3.0.0/bootstrap/js/bootstrap.min.js"></script>
-	<script src="{{ STATIC_URL }}lebowski/usernameslist.js"></script>
-	<script src="{{ STATIC_URL }}lebowski/generated_place.js"></script>
+	<script src="{{ STATIC_URL }}lebowski/usernameslist.js"></script>	
 	<script src="{{ STATIC_URL }}lebowski/randomwords.js"></script>
 	<script src="{{ STATIC_URL }}lebowski/game.js"></script>
 	<script src="{{ STATIC_URL }}lebowski/main.js"></script>

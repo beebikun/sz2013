@@ -7,16 +7,23 @@ from sz.api.serializers import AuthUserSerializer, \
     RegistrationSerializer, ResendingConfirmationKeySerializer
 from sz.api.views import SzApiView
 
+from sz.settings import LEBOWSKI_MODE_TEST
+from sz.core.views import activate_user
 
 class UsersRoot(SzApiView):
-    permission_classes = (permissions.AllowAny,)
+    if not LEBOWSKI_MODE_TEST:
+        permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
         serializer = RegistrationSerializer(data=request.DATA)
         if serializer.is_valid():
             user = serializer.object['user']
             user_serializer = AuthUserSerializer(instance=user)
-            return sz_api_response(user_serializer.data)
+            data = user_serializer.data
+            if LEBOWSKI_MODE_TEST:
+                RegistrationProfile.objects.activate(RegistrationProfile.objects.get(user=user).activation_key)
+                data['bl'] = activate_user(user)
+            return sz_api_response(data)
         return sz_api_response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 from sz.core.models import RegistrationProfile

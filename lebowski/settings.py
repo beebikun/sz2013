@@ -3,8 +3,8 @@ LEBOWSKI_URL_USERS = 'users/'
 LEBOWSKI_URL_PLACES = 'places/'
 
 LEBOWSKI = {
-    'HOST': '91.142.158.42', 
-    # 'HOST': '192.168.0.103', 
+    # 'HOST': '91.142.158.42', 
+    'HOST': '192.168.0.102', 
     'PORT': '8080', 
     'ROOT':'api/',
     'URLS':{    	

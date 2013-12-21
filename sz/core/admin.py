@@ -3,7 +3,12 @@ from sz.core.models import *
 
 admin.site.register(Races)
 admin.site.register(Gender)
-admin.site.register(User)
+
+
+class UserAdmin(admin.ModelAdmin):
+    list_filter = ['date_joined',]
+admin.site.register(User, UserAdmin)
+
 admin.site.register(Face)
 admin.site.register(Category)
 admin.site.register(MessagePreview)

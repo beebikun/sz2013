@@ -1,6 +1,6 @@
 from lebowski import settings
 from lebowski.settings import get_data
-
+from sz.settings import LEBOWSKI_MODE_TEST
 import urllib2
 import json
 import re
@@ -10,11 +10,15 @@ engineurl = "http://%(host)s:%(port)s/"%{'host':settings.LEBOWSKI['HOST'],'port'
 def main_post(data,prefix):
 	req = urllib2.Request(engineurl+prefix)
 	req.add_header('Content-Type', 'application/json')
+	send_data = json.dumps(data)
 	try:
-		return json.loads(urllib2.urlopen(req, json.dumps(data)).read())
+		data = json.loads(urllib2.urlopen(req, send_data).read())
 	except (urllib2.HTTPError,urllib2.URLError), e:
 		reason,code = 'urllib2.HTTPError' in str(type(e)) and (e.reason,e.code) or (e,400)
-		return {"data": str(reason), "status": code}
+		data = {"data": str(reason), "status": code}	
+	if LEBOWSKI_MODE_TEST:
+		data['data'] = dict(receive=data['data'], tranceive=send_data)
+	return data
 
 
 def main_get(data,prefix):  

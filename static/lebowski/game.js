@@ -1,4 +1,12 @@
-
+function json_to_log(data){
+    var bl = data.data.bl, sz_to_bl = bl.data.tranceive;
+    bl.data = bl.data.receive;    
+    delete data.data.bl    
+    add_log_element('sz-bl', sz_to_bl)    
+    add_log_element('bl', bl)
+    add_log_element('sz-client', data)
+    return bl.status
+}
 
 function get_boxes_without_t(list){
     return list.filter(function(b){return })
@@ -41,7 +49,7 @@ function newTower(name, location){
         users:[], 
         /*is_create: false,*/
         is_create: true,
-        level:get_random_num(5,1)
+        level:'-'
     }
     var box = get_clear_boxes().filter(function(b){
         return (location.lat>=b.lat&&location.lat<=b.lat+BOX_STEP&&location.lng>=b.lng&&location.lng<=b.lng+BOX_STEP)
@@ -88,7 +96,13 @@ function newTower(name, location){
 
 var USERS = {
     list:[],
-    is_live:true,
+    is_live:true,    
+    append: function(u){
+        USERS.list.push(u)
+        add_log_element('client', 'Create a new User "' + u.name +'" on map')   
+        update_all_users_list();
+        USERS.live();
+    },
     live:function(){
         USERS.list.forEach(function(u){u.live()})        
     }
@@ -101,23 +115,14 @@ function newUser(params){
         gender   : params.gender,
         speed    : parseInt(params.speed),
         activity : parseInt(params.activity),
-        name     : get_random_name()
+        name     : get_random_name(),
+        email    : 'test' + String(Math.random()).slice(2, 12) + '@sz.com'
     }; 
     //get a random free point on map
     user.box = get_random(get_clear_boxes());
-    user.id = 'user_' + (USERS.list.length + 1)
-
-    var el =  '<div id="' + user.id  + '" class="map-obj user user-' + user.race[0] + '">' + 
-                '<div class="obj-circle"></div>' + 
-                '<i class="fa fa-' + ( user.gender[0]=='f' ? 'female' : user.gender[0]=='m' ? 'male' : 'smile-o') + '" ></i>' + 
-              '</div>';
-    $( "#map-users" ).append(el);
-    user.el = $("#"+user.id)
-    user.el
-        .css({top:user.box.ry+'px', left:user.box.rx+'px', fontSize:Math.ceil(BOX_HEIGHT*0.8)+'px'})
-        .width(BOX_WIDTH).height(BOX_HEIGHT)
     
-    user.lastMessage = Date.now();
+
+    
     function _explore(){
         //explore code here//
     }
@@ -152,28 +157,54 @@ function newUser(params){
             user.live();
         })
     }
-
-    function _create_in_db(){
-        $.getJSON(API.user.users_registration, function(data){
-            console.log(data)
-        })
-        return true
+/*    user.remove = function(){
+        user.el.remove()
+        for (var i = USERS.list.length - 1; i >= 0; i--) {
+            if(USERS.list[i]==user){
+                USERS.list.splice(i,1)
+                break
+            }
+        };
+    }*/
+    function _create_element(){
+        user.id = 'user_' + (USERS.list.length + 1)
+        var el =  '<div id="' + user.id  + '" class="map-obj user user-' + user.race[0] + '">' + 
+                        '<div class="obj-circle"></div>' + 
+                        '<i class="fa fa-' + ( user.gender[0]=='f' ? 'female' : user.gender[0]=='m' ? 'male' : 'smile-o') + '" ></i>' + 
+                      '</div>';
+            $( "#map-users" ).append(el);
+        user.el = $("#"+user.id)
+        user.el
+            .css({top:user.box.ry+'px', left:user.box.rx+'px', fontSize:Math.ceil(BOX_HEIGHT*0.6)+'px'})
+            .width(BOX_WIDTH).height(BOX_HEIGHT)
     }
-    var is_create = _create_in_db();
-
-    /*add_log_element('client', 'Create a new User "' + user.name +'"')  */ 
-    return is_create ? user : is_create
+    function _create_in_db(){
+        var params = {
+            email               : user.email,
+            password1           : '12345',
+            password2           : '12345',
+            race                : user.race[1],
+            gender              : user.gender[1],
+            csrfmiddlewaretoken : CSRF
+        }
+        add_log_element('client-sz', params)
+        $.post(API.user.users_registration, params, function( data ) { 
+            status = json_to_log(data)            
+            if(status!=200) return
+            _create_element()            
+            user.lastMessage = Date.now();
+            USERS.append(user)
+            is_create = true
+        });
+    }
+    _create_in_db(); 
+    return user
 }
 
-function create_new_users(preUsers){    
-    var old_len = USERS.list.length;
-    preUsers.forEach(function(params){
-        var u = newUser(params);
-        if(u) USERS.list.push( u )
-    });
-    add_log_element('client', 'Create new ' + ( USERS.list.length - old_len ) +' users on map');
-    update_all_users_list();
-    USERS.live();
+
+
+function create_new_users(preUsers){
+    preUsers.forEach(function(params){newUser(params);});
 }
 
 var MAP;
@@ -201,7 +232,7 @@ function init(){
             var box = newBox(x, y)
             MAP.push(box);
         }
-    };
+    };    
     PLACES_LIST.forEach(function(p){
         var t = newTower(p.name, p.location)
         if(t) TOWERS.list.push( t )

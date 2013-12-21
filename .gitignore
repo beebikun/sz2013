@@ -1,0 +1,4 @@
+generated_place.*
+sz/passwords.py
+static/libs/*
+*.pyc

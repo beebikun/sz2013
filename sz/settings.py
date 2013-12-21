@@ -5,7 +5,7 @@ import os
 SZ_ROOT = os.path.dirname(os.path.dirname(__file__))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-
+LEBOWSKI_MODE_TEST = True
 ADMINS = (
     ('Shmot Zhmot', 'shmotzhmot@outlook.com'),
 )
@@ -241,4 +241,3 @@ CATEGORIES = [
 ]
 
 
-LEBOWSKI_MODE_TEST = True

@@ -1,4 +1,4 @@
-places = [
+PLACES_LIST = [
 	{name:"Тель Мора", location:{lng:0.026889, lat:0.00316}},
 	{name:"Химедзи", location:{lng:0.029178, lat:0.011075}},
 	{name:"Тоттори", location:{lng:0.023664, lat:0.01579}},

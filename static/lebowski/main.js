@@ -13,14 +13,17 @@ function get_user_li_elemets(user, showScore){
              '</li>';
     return el
 }
-
+var A;
 function add_log_element(cls, msg){
-    var l = AUTORS_LIST.filter(function(a){return a.cls==cls});
-    var author = l.length ? l[0] : undefined
+    var l = AUTORS_LIST.filter(function(a){return a.cls==cls}),author = l.length ? l[0] : undefined, text_class = '';
     if(author===undefined)return
-    var el = '<p class="'+author.cls+'-say"><span>'+author.name+' say</span><span>' + ( msg || 'Well done!') + '</span></p>'
+    if(msg instanceof Object) {
+        if(msg.status==400) var text_class = 'text-danger';
+        var msg = JSON.stringify(msg).replace(/:{/g,': {').replace(/,"/g,', "').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    }
+    var el = '<p class="'+author.cls+'-say"><span>'+author.name+' say to '+author.to+':</span><span class="'+text_class+'">' + msg + '</span></p>';
     $("#console .overview").append(el);
-    $("#console").tinyscrollbar();
+    $("#console").tinyscrollbar_update( 'bottom' );
     return true
 }
 
@@ -35,7 +38,7 @@ function update_all_places_list(){
                  '</li>';
         $("#all-places-list .overview").append(el)
     });
-    $("#all-places-list").tinyscrollbar();
+    $("#all-places-list").tinyscrollbar_update();
 }
 
 function update_all_users_list(){
@@ -43,7 +46,7 @@ function update_all_users_list(){
     USERS.list.forEach(function(u){
         $("#all-users-list .overview").append(get_user_li_elemets(u));
     });
-    $("#all-users-list").tinyscrollbar();
+    $("#all-users-list").tinyscrollbar_update();
 }
 
 function form_to_users(){
@@ -66,6 +69,7 @@ function form_to_users(){
             race: get_or_random('race', RACES_LIST),
             gender: get_or_random('gender', GENDERS_LIST),
         });
+
     };
     create_new_users(preUsers)
 }
@@ -81,13 +85,7 @@ function set_size(){
     get_box_height();
     get_box_width(); 
     $("#console").css({marginLeft:mapBox+50})
-    $.each($("[data-role=scrollbar]"),function(n,s){
-        if(!$(s).children('.viewport').length){
-            $(s).append('<div class="scrollbar" ><div class="track" ><div class="thumb"><div class="end"></div></div></div></div>');
-            $(s).append('<div class="viewport"> <div class="overview" ></div></div>');
-        }
-        $(s).tinyscrollbar();
-    });
+    
     var listsHeight = ($(window).height()-410)/2
     $("#all-users-list .viewport, #all-places-list .viewport").height( (listsHeight>50) ? listsHeight : 50 )
     $("#console .viewport").height(mapBox);
@@ -95,16 +93,35 @@ function set_size(){
     if(!window.TOWERS.list.length) init();
 }
 
-$( document ).ready(function() { 
-    $.ajax({
-        url: ip + "?callback=?",
-        dataType: "jsonp",
-        success: toJsonContainer
+function set_api(){
+    CSRF = $('[name=csrfmiddlewaretoken]').val();
+    $.getJSON(window.location.origin + '/api/', function(response){ 
+        API = response.data; 
+        $.getJSON(API.static.static_races, function(response){
+            response.data.data.forEach(function(r){RACES_LIST.push([r.name, r.id])});
+            $.getJSON(API.static.static_genders, function(response){
+                response.data.data.forEach(function(g){GENDERS_LIST.push([g.name, g.id])});
+                $.getJSON(API.test_mode.generate_places, function(response){
+                    response.data.venues.forEach(function(p){PLACES_LIST.push(p)});
+                    set_size();        
+                    $("#screen-overflow").hide();
+                });
+            });
+        });
     });
+}
+
+$( document ).ready(function() { 
+    $.each($("[data-role=scrollbar]"),function(n,s){
+        if(!$(s).children('.viewport').length){
+            $(s).append('<div class="scrollbar" ><div class="track" ><div class="thumb"><div class="end"></div></div></div></div>');
+            $(s).append('<div class="viewport"> <div class="overview" ></div></div>');
+        }
+        $(s).tinyscrollbar();
+    });
+    set_api();
 
     $( window ).scrollTop(0)
-    
-    set_size();
     
     $( "#newUsersCreateBtn" ).click(function(){form_to_users();});
 
