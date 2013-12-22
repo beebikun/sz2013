@@ -9,6 +9,10 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ['date_joined',]
 admin.site.register(User, UserAdmin)
 
+class PlaceAdmin(admin.ModelAdmin):
+    list_filter = ['date',]
+admin.site.register(Place, PlaceAdmin)
+
 admin.site.register(Face)
 admin.site.register(Category)
 admin.site.register(MessagePreview)

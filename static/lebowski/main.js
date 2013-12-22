@@ -13,7 +13,7 @@ function get_user_li_elemets(user, showScore){
              '</li>';
     return el
 }
-var A;
+
 function add_log_element(cls, msg){
     var l = AUTORS_LIST.filter(function(a){return a.cls==cls}),author = l.length ? l[0] : undefined, text_class = '';
     if(author===undefined)return
@@ -89,11 +89,11 @@ function set_size(){
     var listsHeight = ($(window).height()-410)/2
     $("#all-users-list .viewport, #all-places-list .viewport").height( (listsHeight>50) ? listsHeight : 50 )
     $("#console .viewport").height(mapBox);
-    /*if(window.TOWERS!=undefined)TOWERS.remove()*/
-    if(!window.TOWERS.list.length) init();
+    build_map();
 }
 
 function set_api(){
+    $("#screen-overflow").show();
     CSRF = $('[name=csrfmiddlewaretoken]').val();
     $.getJSON(window.location.origin + '/api/', function(response){ 
         API = response.data; 
@@ -101,11 +101,7 @@ function set_api(){
             response.data.data.forEach(function(r){RACES_LIST.push([r.name, r.id])});
             $.getJSON(API.static.static_genders, function(response){
                 response.data.data.forEach(function(g){GENDERS_LIST.push([g.name, g.id])});
-                $.getJSON(API.test_mode.generate_places, function(response){
-                    response.data.venues.forEach(function(p){PLACES_LIST.push(p)});
-                    set_size();        
-                    $("#screen-overflow").hide();
-                });
+                $("#screen-overflow").hide();                
             });
         });
     });
@@ -120,6 +116,7 @@ $( document ).ready(function() {
         $(s).tinyscrollbar();
     });
     set_api();
+    set_size();
 
     $( window ).scrollTop(0)
     
@@ -161,5 +158,16 @@ $( document ).ready(function() {
         TOWERS.deselect();
         $( "#place-settings" ).hide();
         $( "#main-settings" ).show();
+    });
+
+    $( "#start-game" ).click(function(){
+        var pause = $( this ).find('.fa').hasClass('fa-pause')
+        $( this ).find('.fa').toggleClass('fa-pause', 'fa-start');
+        if(PLACES_LIST.length===0){get_places_from_api()}
+        else{
+            if(pause){USERS.live()}
+            else{USERS.wait()}
+        }
     })
+
 });

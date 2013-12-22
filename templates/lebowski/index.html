@@ -108,8 +108,8 @@
         <div id="main-settings">
             <h2>
                 Main settings
-                <button class="btn btn-primary btn-lg pull-right disabled" type="button">
-                    <i class="fa fa-pause"></i>
+                <button class="btn btn-primary btn-lg pull-right" type="button" id="start-game">
+                    <i class="fa fa-play"></i>
                 </button>
             </h2>
             <section>
@@ -188,6 +188,11 @@ function get_random_num(max, min){
 }
 function get_random(list){return list[get_random_num(list.length)]}
 function get_random_name(){return get_random(usernamesList)}
+function get_random_float(n){
+	// n - number of decimal places
+	var n = n || 2, dec = Math.pow( 10, n )
+	return Math.round( Math.random()*dec )/dec
+}
 function get_random_text(len) {
     var len = len || get_random_num(80, 20), start = get_random_num(separate_words_length), end = start + len, splice = [];
     if(end>(separate_words_length-1)){var end = separate_words_length-1, start = end - len;}

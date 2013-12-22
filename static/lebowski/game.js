@@ -8,9 +8,6 @@ function json_to_log(data){
     return bl.status
 }
 
-function get_boxes_without_t(list){
-    return list.filter(function(b){return })
-}
 
 function get_clear_boxes(){
     return MAP.filter(function(b){return  !TOWERS.list.filter(function(t){return t.box.id==b.id}).length})
@@ -104,8 +101,12 @@ var USERS = {
         USERS.live();
     },
     live:function(){
+        USERS.is_live = true;
         USERS.list.forEach(function(u){u.live()})        
-    }
+    },
+    wait:function(){
+        USERS.is_live = false;
+    },
 }
 
 function newUser(params){
@@ -116,7 +117,8 @@ function newUser(params){
         speed    : parseInt(params.speed),
         activity : parseInt(params.activity),
         name     : get_random_name(),
-        email    : 'test' + String(Math.random()).slice(2, 12) + '@sz.com'
+        email    : 'test' + String(Math.random()).slice(2, 12) + '@sz.com',
+        radius   : 250,
     }; 
     //get a random free point on map
     user.box = get_random(get_clear_boxes());
@@ -124,6 +126,11 @@ function newUser(params){
 
     
     function _explore(){
+        var params = {
+            radius : user.radius,
+            latitude : user.box.lat + BOX_STEP*get_random_float(), 
+            latitude : user.box.lng + BOX_STEP*get_random_float() ,
+        }
         //explore code here//
     }
     function _message(){
@@ -149,6 +156,7 @@ function newUser(params){
     }
     user.live = function(){
         //move on one box with speed user.speed*1000/60
+        if(!USERS.is_live) return
         var nearby_list = get_neirby_boxes(user.box);
         var next_box = get_random(nearby_list);
         user.box = next_box || user.box;        
@@ -190,7 +198,7 @@ function newUser(params){
         add_log_element('client-sz', params)
         $.post(API.user.users_registration, params, function( data ) { 
             status = json_to_log(data)            
-            if(status!=200) return
+            /*if(status!=200) return*/
             _create_element()            
             user.lastMessage = Date.now();
             USERS.append(user)
@@ -222,22 +230,30 @@ function newBox(x,y){
     return box
 }
 
-function init(){
+
+
+function build_map(){
     MAP = new Array;
-    TOWERS.list = new Array;
-    USERS.list = new Array;
-    var mapBox = document.getElementById("map").getBoundingClientRect();
     for (var x=0; x <= BOX_VALUE-1; x++) {
         for (var y=0; y <= BOX_VALUE-1; y++) {
-            var box = newBox(x, y)
+            var box = newBox(x, y);
             MAP.push(box);
         }
-    };    
-    PLACES_LIST.forEach(function(p){
-        var t = newTower(p.name, p.location)
-        if(t) TOWERS.list.push( t )
-    })
-    update_all_places_list();
-    update_all_users_list();
-    add_log_element('client', 'Create new ' + TOWERS.list.length +' towers on map')
+    };
+}
+
+
+function get_places_from_api(){
+    $("#screen-overflow").show();
+    $.getJSON(API.test_mode.generate_places, function(response){
+        response.data.venues.forEach(function(p){PLACES_LIST.push(p)});
+        TOWERS.list = new Array;
+        PLACES_LIST.forEach(function(p){
+            var t = newTower(p.name, p.location)
+            if(t) TOWERS.list.push( t )
+        })
+        add_log_element('client', 'Create new ' + TOWERS.list.length +' towers on map')
+        update_all_places_list();
+        $("#screen-overflow").hide();
+    });
 }
