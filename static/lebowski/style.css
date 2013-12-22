@@ -24,7 +24,11 @@ html{
 html, h1, h2, h3, h4, h5, h6{
     font-family: 'Lato', sans-serif;
 }
-
+h5{
+    font-weight: bold;
+    font-family: 'Nixie One', cursive;
+    text-decoration: underline;
+}
 #screen-overflow{
     background-color: #34495e;
     color:#fff;
@@ -105,16 +109,19 @@ header .unwrap-menu i{
     width: 280px; /*#settings width - 15*/
     height: 120px;
 }
-#place-settings{
+#place-settings, #user-settings{
     display: none;
 }
-#close-place-settings{
+/*#user-new-message textarea{
+    width: 100%
+}*/
+.close-settings{
     height: 15px;
 }
-#place-settings #place-header{
+.settings-header{
     text-align: center;
 }
-#place-settings #place-location p{
+.settings-location p{
     display: inline-block;
     margin-right: 10px;    
 }
@@ -203,10 +210,10 @@ header .unwrap-menu i{
 
 #console{
     position: relative;
-    width: 490px;
+    width: 465px;
 }
 #console .viewport{
-    width: 475px; 
+    width: 450px; 
     height: 500px;
 }
 #console p>span:first-child{

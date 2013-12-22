@@ -29,7 +29,8 @@ class PlaceVenueExplore(SzApiView):
     For example, 
     [places for position (50.2616113, 127.5266082) radius 250](?latitude=50.2616113&longitude=127.5266082&radius=250).
     """
-    permission_classes = (permissions.IsAuthenticated,)
+    if not LEBOWSKI_MODE_TEST:
+        permission_classes = (permissions.IsAuthenticated,)
     def _serialize_item(self, item):
         item_serializer = serializers.PlaceSerializer(instance=item[u'place'])
         serialized_item = {

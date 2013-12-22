@@ -689,7 +689,7 @@ function MessagePublisherController($scope, messagePreviewService,staticValueSer
         $scope.$broadcast('raphaelDirectiveFaces.getBBox')
         $scope.$broadcast('raphaelDirectiveCanvas.getBBox')
         /*$scope.preview.photo.faces.photoBox = $scope.photoBox    */
-        $scope.preview.photo.box.face = $scope.face.id
+        $scope.face = $scope.face.id
         $scope.preview.$publish(
             {},
             function(response){

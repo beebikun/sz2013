@@ -105,7 +105,8 @@
     </section>   
 
     <section id="settings"><!-- Hidding right menu with settings -->
-        <div id="main-settings">
+
+        <div id="main-settings"><!-- Main settings -->
             <h2>
                 Main settings
                 <button class="btn btn-primary btn-lg pull-right" type="button" id="start-game">
@@ -123,6 +124,7 @@
 	                </div>
                 </fieldset>
             </section>
+
             <section>
                 <h3>Users</h3>
                 <div class="form-group">
@@ -149,35 +151,61 @@
                     <ul class="nav nav-pills nav-stacked" id="all-users-list" data-role="scrollbar"></ul>
                 </div>
             </section>
+
             <section>
                 <h3>Places</h3>
                 <input disabled type="text" class="form-control input-sm margin-btm-sm" placeholder="Search a place">
                 <ul class="nav nav-pills nav-stacked" id="all-places-list" data-role="scrollbar"></ul>
             </section>
-        </div>
+        </div><!-- End Main settings -->
 
-        <div id="place-settings">    
-            <p id="close-place-settings"><button type="button" class="close" aria-hidden="true" class="pull-right" >&times;</button></p>        
-            <h2 id="place-header"><span id="place-header-name"></span><span id="place-header-level" class="pull-right"></span></h2>
+        <div id="place-settings"> <!--Place settings -->
+            <p class="close-settings"><button type="button" class="close" aria-hidden="true" class="pull-right" >&times;</button></p>        
+            <h4 class="settings-header"><span id="place-header-name"></span><span id="place-header-level" class="pull-right"></span></h4>
             <section>
-                <h3>Main</h3>
-                <div id="place-location">
+                <h5>Main</h5>
+                <div class="settings-location">
                     <p>Lng: <span></span></p>
                     <p>Lat: <span></span></p>
                 </div>
-                <div>
-                    
-                </div>
             </section>
             <section>
-                <h3>Users list</h3>
+                <h5>Users list</h5>
+                <p>You must do get on server for this stuff</p>
                 <ul class="nav nav-pills nav-stacked" id="place-userslist"></ul>
             </section>
-        </div>
-        <div class="unwrap-menu">
+        </div> <!-- End Place settings -->
+
+        <div id="user-settings"> <!--User settings -->
+            <p class="close-settings"><button type="button" class="close" aria-hidden="true" class="pull-right" >&times;</button></p>        
+            <h4 class="settings-header"><span id="user-header-name"></span><span id="user-header-zp" class="pull-right"></span></h4>
+            <section>
+                <h5>Main</h5>
+                <p id="user-email">E-mail: <span></span></p>
+                <p id="user-radius">Radius: <span></span></p>
+                <div class="settings-location">
+                    <p>Lng: <span></span></p>
+                    <p>Lat: <span></span></p>
+                </div>
+            </section>
+            <section id="user-new-message">
+            	<h5>New message</h5>
+            	<button type="button" class="margin-btm-sm btn btn-default btn-sm btn-block" data-toggle="button" id="pick-place">Pick the Place</button>
+            	<p id="selected-place"></p>
+            	<textarea class="form-control margin-btm-sm" rows="3"></textarea>
+            	<button type="button" class="btn btn-default btn-sm btn-block" id="user-send-message">Add message</button>
+            </section>
+            <section>
+                <h5>Places list</h5>
+                <ul class="nav nav-pills nav-stacked" id="user-places"></ul>
+            </section>
+        </div> <!-- End User settings -->
+
+        <div class="unwrap-menu"> <!-- Wrap button -->
             <i class="fa fa-arrow-circle-o-left fa-3x"></i>
         </div>
-    </section>
+
+    </section><!-- End hidding right menu -->
 
     
 
@@ -209,11 +237,8 @@ var BOX_HEIGHT;
 var BOX_STEP;
 
 function get_box_size(){
-	console.log(Math.floor(document.getElementById("map").getBoundingClientRect().width))
-	console.log(BOX_VALUE)
 	BOX_WIDTH = Math.round(document.getElementById("map").getBoundingClientRect().width/BOX_VALUE); 
 	BOX_HEIGHT = Math.round(document.getElementById("map").getBoundingClientRect().height/BOX_VALUE); 
-	console.log(BOX_WIDTH)
 }
 function get_box_step(){BOX_STEP = MAX_POSITION/BOX_VALUE;}
 
@@ -230,9 +255,13 @@ var COLOR_LIST = ['red', 'blue', 'green', 'gray', '#16a085', '#27ae60', '#2980b9
 var PLACES_LIST = new Array;
 var RACES_LIST = new Array;
 var GENDERS_LIST = new Array;
+var FACES_LIST = new Array;
 var API;
 var CSRF;
 
+
+var PICK_PLACE;
+var SELECTED_PLACE = {name:'not selected'};
 </script>	
 	<script src="{{ STATIC_URL }}libs/jquery/jquery-1.9.1.min.js"></script>
 	<script src="{{ STATIC_URL }}libs/jquery/jquery.tinyscrollbar.min.js"></script>

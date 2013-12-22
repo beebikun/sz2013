@@ -3,7 +3,7 @@ separate_words = raw_text.split(' ')
 separate_words_length = separate_words.length
 
 function get_user_li_elemets(user, showScore){
-    var el = '<li class="place-userslist-user">'+
+    var el = '<li class="place-userslist-user" data-userid="'+user.id+'">'+
                 '<a href="#">' + 
                     ( showScore ? '<span class="place-userslist-user-score badge pull-right">'+ user.score +'</span>' : '') + 
                     '<span class="place-userslist-user-race pull-left ' +user.race[0] + '"">' + 
@@ -13,12 +13,15 @@ function get_user_li_elemets(user, showScore){
              '</li>';
     return el
 }
-
 function add_log_element(cls, msg){
     var l = AUTORS_LIST.filter(function(a){return a.cls==cls}),author = l.length ? l[0] : undefined, text_class = '';
+    var truncated = '...(remaining elements truncated)...'
     if(author===undefined)return
+    if(cls=='sz-bl' && typeof(msg) == 'string') var msg = JSON.parse( msg );
     if(msg instanceof Object) {
         if(msg.status==400) var text_class = 'text-danger';
+        if(msg.text!==undefined) msg.text = truncated;
+        if(msg.message_text!=undefined) msg.message_text = truncated;
         var msg = JSON.stringify(msg).replace(/:{/g,': {').replace(/,"/g,', "').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     }
     var el = '<p class="'+author.cls+'-say"><span>'+author.name+' say to '+author.to+':</span><span class="'+text_class+'">' + msg + '</span></p>';
@@ -30,23 +33,39 @@ function add_log_element(cls, msg){
 function update_all_places_list(){
     $( "#all-places-list .overview" ).empty();
     TOWERS.list.forEach(function(t){
-        var el = '<li class="">'+
+        var el = '<li class="placeslist-place" data-placeid="'+t.id+'">'+
                     '<a href="#">' + 
                         '<span class="badge pull-right">'+ t.level +'</span>' + 
                         '<span class="">' + t.name + '</span>' +
                     '</a>'+
                  '</li>';
         $("#all-places-list .overview").append(el)
+        /*if(t.is_create) {
+            var option = '<option value="'+ t.bd_id +'">'+t.name+'</option>'
+            $("#user-new-message select").append(option);            
+        }*/
+            
+    });
+    $(".placeslist-place").click(function(){
+        var el = this;
+        var tower = TOWERS.list.filter(function(t){return t.id==el.getAttribute('data-placeid')})[0]
+        if(tower) tower.set_active();
     });
     $("#all-places-list").tinyscrollbar_update();
+    window.setTimeout(function(){update_all_places_list()},10*1000)
 }
 
 function update_all_users_list(){
     $("#all-users-list .overview").empty();
     USERS.list.forEach(function(u){
-        $("#all-users-list .overview").append(get_user_li_elemets(u));
+        $("#all-users-list .overview").append(get_user_li_elemets(u));        
     });
     $("#all-users-list").tinyscrollbar_update();
+    $(".place-userslist-user").click(function(){
+        var el = this;
+        var user = USERS.list.filter(function(u){return u.id==el.getAttribute('data-userid')})[0]
+        if(user) user.set_active();
+    });
 }
 
 function form_to_users(){
@@ -101,12 +120,16 @@ function set_api(){
         API = response.data; 
         $.getJSON(API.static.static_races, function(response){
             response.data.data.forEach(function(r){RACES_LIST.push([r.name, r.id])});
-            $.getJSON(API.static.static_genders, function(response){
-                response.data.data.forEach(function(g){GENDERS_LIST.push([g.name, g.id])});
-                $("#screen-overflow").hide();                
-            });
         });
+        $.getJSON(API.static.static_faces, function(response){
+            response.data.data.forEach(function(f){FACES_LIST.push([f.race, f.id, f.emotion])});
+        });
+        $.getJSON(API.static.static_genders, function(response){
+            response.data.data.forEach(function(g){GENDERS_LIST.push([g.name, g.id])});
+        });
+        $("#screen-overflow").hide();
     });
+    
 }
 
 $( document ).ready(function() { 
@@ -165,9 +188,11 @@ $( document ).ready(function() {
     $( "#settings .unwrap-menu i" ).click()
     
 
-    $( "#close-place-settings button" ).click(function(){
+    $( ".close-settings button" ).click(function(){
         TOWERS.deselect();
+        USERS.deselect();
         $( "#place-settings" ).hide();
+        $( "#user-settings" ).hide();
         $( "#main-settings" ).show();
     });
 
@@ -179,6 +204,25 @@ $( document ).ready(function() {
             if(play){USERS.wait()}
             else{USERS.live()}
         }
+    })
+
+    $( "#pick-place" ).click(function(){
+        PICK_PLACE = true; 
+        TOWERS.list.forEach(function(t){t.el.css({cursor:'crosshair'}) });
+    })
+
+    $( "#user-send-message" ).click(function(){
+        var bd_id = $("#selected-place").attr('data-bd_id');
+        $("#selected-place").attr('data-bd_id','').text('')
+        if(!bd_id){
+            add_log_element('client', 'Selected place for message is not set.');
+            return
+        }
+        var user = USERS.list.filter( function(u){return u.email==$( "#user-settings #user-email span" ).text()} )[0]
+        var target = TOWERS.created().filter( function(t){return t.bd_id==bd_id} )[0]
+        var text = $("#user-new-message textarea").val()
+        $("#user-new-message textarea").val('')
+        user.message(target, text)
     })
 
 });

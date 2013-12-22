@@ -10,6 +10,30 @@ function json_to_log(response){
     return (bl==undefined) ? response.meta.code : bl.status
 }
 
+var helpers = {
+    set_el: function(obj){
+        obj.el = $("#"+obj.id)
+        obj.el
+            .css({top:obj.box.ry+'px', left:obj.box.rx+'px', fontSize:Math.ceil(BOX_HEIGHT*0.6)+'px'})
+            .width(BOX_WIDTH).height(BOX_HEIGHT)
+            .click(function(){obj.set_active()});    
+    },
+    set_active: function(obj){
+        if(PICK_PLACE) return
+        TOWERS.deselect();
+        USERS.deselect();
+        obj.el.children('.obj-circle').animate({opacity:1,width:'100%',height:'100%',marginTop:0,marginLeft:0},200);
+        $( "#main-settings" ).hide();
+        $( "#user-settings" ).hide();
+        $( "#place-settings" ).hide();
+        var m = $( "#settings" ).data("margin");
+        if( m===undefined || parseInt($( "#settings" ).css(m.d))!=0) $( "#settings .unwrap-menu i" ).click();        
+    },
+    set_unactive: function(obj){
+        obj.el.children('.obj-circle').css({opacity:0,width:0,height:0,marginTop:'50%',marginLeft:'50%'})
+    }
+}
+
 
 function get_clear_boxes(){
     return MAP.filter(function(b){return  !TOWERS.list.filter(function(t){return t.box.id==b.id}).length})
@@ -51,7 +75,7 @@ function newTower(name, location){
         name:name, 
         location:location, 
         users:[], 
-        is_create: true,
+        is_create: false,
         level:'-',
         cls: 'unknown',
     }
@@ -67,26 +91,31 @@ function newTower(name, location){
                 '<i class="fa fa-flag " ></i>' + 
               '</div>';
     $( "#map-towers" ).append(el)
-    tower.el = $("#"+tower.id)
-    tower.el
-        .css({top:tower.box.ry+'px', left:tower.box.rx+'px', fontSize:Math.ceil(BOX_HEIGHT*0.6)+'px'})
-        .width(BOX_WIDTH).height(BOX_HEIGHT)
-        .click(function(){tower.set_active()});
+    helpers.set_el(tower)
     tower.set_active = function(){
-        TOWERS.deselect();
-        tower.el.children('.obj-circle').animate({opacity:1,width:'100%',height:'100%',marginTop:0,marginLeft:0},200);
-
-        tower.push_users();
-
-        $( "#main-settings" ).hide();
-        var m = $( "#settings" ).data("margin");
-        if( m===undefined || parseInt($( "#settings" ).css(m.d))!=0) $( "#settings .unwrap-menu i" ).click();        
+        if(PICK_PLACE){
+            if(!tower.is_create){
+                add_log_element('client', 'This Tower is not create in DB');
+            }
+            else{
+                $("#selected-place").text(tower.name)
+                $("#selected-place").attr('data-bd_id', tower.bd_id)                
+            }
+            TOWERS.list.forEach(function(t){
+                t.el.css({cursor:'pointer'})
+            });
+            $( "#pick-place" ).removeClass('active')
+            PICK_PLACE = false;
+            return
+        }        
         $( "#place-settings #place-header-name" ).text(tower.name)
-        $( "#place-settings #place-location p:first-child span" ).text(tower.location.lng)
-        $( "#place-settings #place-location p:last-child span" ).text(tower.location.lat)
+        $( "#place-settings .settings-location p:first-child span" ).text(tower.location.lng)
+        $( "#place-settings .settings-location p:last-child span" ).text(tower.location.lat)
+        tower.push_users();
+        helpers.set_active(tower);
         $( "#place-settings" ).show();
     }
-    tower.set_unactive = function(){tower.el.children('.obj-circle').css({opacity:0,width:0,height:0,marginTop:'50%',marginLeft:'50%'}) }
+    tower.set_unactive = function(){ helpers.set_unactive(tower) }
     tower.push_users = function(){
         $( "#place-userslist" ).empty();
         for (var i = tower.users.length - 1; i >= 0; i--) {$( "#place-userslist" ).append(get_user_li_elemets(userlist[i], true)) };
@@ -94,8 +123,9 @@ function newTower(name, location){
     tower.update =function(data){
         tower.el.removeClass('place-'+tower.cls)
         if(tower.cls=='unknown'){
-            tower.cls = 'nobody'
-            tower.bd_id = data.id
+            tower.cls = 'nobody';
+            tower.is_create = true;
+            tower.bd_id = data.id;
         }
         tower.el.addClass('place-'+tower.cls)
     }
@@ -108,21 +138,23 @@ var USERS = {
     append: function(u){
         USERS.list.push(u)
         add_log_element('client', 'Create a new User "' + u.name +'" on map')   
-        update_all_users_list();
-        USERS.live();
+        update_all_users_list();   
+        if(USERS.is_live) USERS.live();
     },
     live:function(){
         USERS.is_live = true;
-        USERS.list.forEach(function(u){u.live()})        
+        USERS.list.forEach(function(u){u.live();})
     },
     wait:function(){
         USERS.is_live = false;
     },
+    deselect: function(){USERS.list.forEach(function(u){u.set_unactive()});},
 }
 
 function newUser(params){
     //race is Array, gender is Array, speed, activity
     var user = {
+        is_live  : true,
         race     : params.race,
         gender   : params.gender,
         speed    : parseInt(params.speed),
@@ -134,52 +166,86 @@ function newUser(params){
     //get a random free point on map
     user.box = get_random(get_clear_boxes());
     
-
-    
+    user.message =function(target, text){
+        if(!TOWERS.created().length) return
+        var target = target  || get_random( TOWERS.created() ), color = get_random( COLOR_LIST );
+        var message = {
+            email : user.email,
+            place : target.bd_id,
+            text  : text || get_random_text(),
+            csrfmiddlewaretoken : CSRF
+        };        
+        function _message_animate(list){list.map(function(i){i.el.find('i').css({ borderColor: color })}) }
+        function _message_unanimate(list){list.map(function(i){i.el.find('i').removeAttr('style')}) }
+        _message_animate([target, user]);
+        $.post(API.messages_previews, message, function(response){
+            var prev_message = response.data;  
+            var face = get_random( FACES_LIST.filter(function(f){ return user.race[1]==f[0] }) )[1]
+            prev_message.latitude = user.lat;
+            prev_message.longitude = user.lng;
+            prev_message.csrfmiddlewaretoken = CSRF;
+            prev_message.email = user.email;
+            prev_message.face = face//id of used face - send a random with our race id
+            $.post(API.messages_previews + '/'  + prev_message.id + '/publish', prev_message, function(response){
+                add_log_element('client-sz', prev_message)
+                json_to_log(response)
+                _message_unanimate([target, user]);
+            })
+        });
+    }    
     function _explore(){
+        user.lat = user.box.lat + BOX_STEP*get_random_float();
+        user.lng = user.box.lng + BOX_STEP*get_random_float();
         var params = {
             radius    : user.radius,
-            latitude  : user.box.lat + BOX_STEP*get_random_float(), 
-            longitude : user.box.lng + BOX_STEP*get_random_float(),
+            latitude  : user.lat, 
+            longitude : user.lng,
             email     : user.email
         }
         add_log_element('client-sz', params)
         $.getJSON(API.places.places_explore_in_venues, params, function(response){
             status = json_to_log(response)
             TOWERS.update(response.data.places)
+            user.message();
         })        
     }
-    function _message(){
+    function _activity(){
         var dev = 200;
         if((Date.now() - user.lastMessage) < ( get_random_num(1000+dev, 1000-dev)*360/user.activity ) ) return
         user.lastMessage = Date.now();
         if(!TOWERS.list.length) return
-        _explore()
-
-        //send message code here//
-        var target = get_random( TOWERS.created() )
-        var message = get_random_text()
-
-        //animate sending message        
-        var color = get_random( COLOR_LIST )
-        function _message_animate(i){            
-            i.el.find('i').css({ borderColor: color })
-            window.setTimeout(function(){i.el.find('i').removeAttr('style')}, 400)
-        }
-        _message_animate(target)
-        _message_animate(user)
-
+        _explore() //_message calls in _explore
     }
     user.live = function(){
         //move on one box with speed user.speed*1000/60
         if(!USERS.is_live) return
-        var nearby_list = get_neirby_boxes(user.box);
-        var next_box = get_random(nearby_list);
-        user.box = next_box || user.box;        
-        user.el.stop().animate({top:user.box.ry+'px', left:user.box.rx+'px'}, 360*100/user.speed, function(){            
-            _message();
-            user.live();
-        })
+        if(user.is_live){
+            var nearby_list = get_neirby_boxes(user.box);
+            var next_box = get_random(nearby_list);
+            user.box = next_box || user.box;        
+            user.el.stop().animate({top:user.box.ry+'px', left:user.box.rx+'px'}, 360*100/user.speed, function(){            
+                _activity();
+                user.live();
+            })            
+        }
+        else{
+            window.setTimeout(function(){user.live();}, 360*100/user.speed)
+        }
+    }
+    user.set_active = function(){
+        $( "#user-settings #user-header-name" ).text(user.name)
+        $( "#user-settings #user-header-zp" ).text('sz')
+        $( "#user-settings #user-email span" ).text(user.email)
+        $( "#user-settings .settings-location p:first-child span" ).text(user.lng || user.box.lng)
+        $( "#user-settings .settings-location p:last-child span" ).text(user.lat || user.box.lat)
+        $( "#user-settings #user-radius span" ).text(user.radius)
+        helpers.set_active(user);        
+        $( "#user-settings" ).show();
+        user.is_live = false;
+    }
+    user.set_unactive = function(){
+        user.is_live = true;
+        helpers.set_unactive(user);
     }
     function _create_element(){
         user.id = 'user_' + (USERS.list.length + 1)
@@ -187,11 +253,8 @@ function newUser(params){
                         '<div class="obj-circle"></div>' + 
                         '<i class="fa fa-' + ( user.gender[0]=='f' ? 'female' : user.gender[0]=='m' ? 'male' : 'smile-o') + '" ></i>' + 
                       '</div>';
-            $( "#map-users" ).append(el);
-        user.el = $("#"+user.id)
-        user.el
-            .css({top:user.box.ry+'px', left:user.box.rx+'px', fontSize:Math.ceil(BOX_HEIGHT*0.6)+'px'})
-            .width(BOX_WIDTH).height(BOX_HEIGHT)
+        $( "#map-users" ).append(el);            
+        helpers.set_el(user)
     }
     function _create_in_db(){
         var params = {
@@ -264,6 +327,7 @@ function get_places_from_api(){
         })
         add_log_element('client', 'Create new ' + TOWERS.list.length +' towers on map')
         update_all_places_list();
+
         document.getElementById('box-value-set').setAttribute('disabled')        
         $("#screen-overflow").hide();
     });

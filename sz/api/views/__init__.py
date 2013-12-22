@@ -70,7 +70,7 @@ class ApiRoot(SzApiView):
                 'current_user': reverse('auth-user', request=request),
                 'users_registration': reverse('users-registration', request=request),            
             },
-            'messages-previews': reverse('message-preview-list', request=request),
+            'messages_previews': reverse('message-preview-list', request=request),
             # 'city-nearest': reverse('city-nearest', request=request),
             # 'messages-search': reverse('message-search', request=request),
             # 'users-resending-activation-key': reverse('users-resending-activation-key', request=request),
