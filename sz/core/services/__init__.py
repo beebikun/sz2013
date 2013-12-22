@@ -83,7 +83,6 @@ class PlaceService(FeedService):
             query,
             radius
         )['venues']
-        print result
         #filter only in radius
         result_filter_by_radius = filter(
             lambda p: gis_core.distance(

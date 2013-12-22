@@ -78,17 +78,19 @@ function form_to_users(){
 
 
 function set_size(){
+    get_box_step();
     var consoleW = $("#console").width()-60;
-    var ww = ($(window).height()<($(window).width()-consoleW)) ? $(window).height() : ($(window).height()-consoleW);
-    var mapBox = Math.floor( Math.floor(ww*0.1)*10/BOX_VALUE )*BOX_VALUE;
+    if($("#map").width()==0) var ww = ($(window).height()<($(window).width()-consoleW)) ? $(window).height() : ($(window).height()-consoleW);
+    else var ww = $("#map").width()
+    var mapBox = Math.round( ww/BOX_VALUE )*BOX_VALUE;    
     $("#map").width(mapBox).height(mapBox);
-    get_box_height();
-    get_box_width(); 
     $("#console").css({marginLeft:mapBox+50})
     
     var listsHeight = ($(window).height()-410)/2
     $("#all-users-list .viewport, #all-places-list .viewport").height( (listsHeight>50) ? listsHeight : 50 )
     $("#console .viewport").height(mapBox);
+    $("#console").tinyscrollbar_update( );
+
     build_map();
 }
 
@@ -116,7 +118,14 @@ $( document ).ready(function() {
         $(s).tinyscrollbar();
     });
     set_api();
-    set_size();
+    $("#box-value-set button").click(function(){        
+        if(MAP) MAP.forEach(function(box){box.el.remove();})
+        var val = $("#box-value-set input").val() || 15;
+        if(val%2===0) var val = val - 1;
+        BOX_VALUE = val;        
+        set_size();
+    });
+    $("#box-value-set button").click();
 
     $( window ).scrollTop(0)
     
@@ -152,8 +161,10 @@ $( document ).ready(function() {
             return (m===undefined) ? false : !parseInt($( p ).css(m.d))
         }).map(function(n, ico){wrapMenu(ico);});
         wrapMenu(icon);
-    });   
+    });
+    $( "#settings .unwrap-menu i" ).click()
     
+
     $( "#close-place-settings button" ).click(function(){
         TOWERS.deselect();
         $( "#place-settings" ).hide();
@@ -161,12 +172,12 @@ $( document ).ready(function() {
     });
 
     $( "#start-game" ).click(function(){
-        var pause = $( this ).find('.fa').hasClass('fa-pause')
+        var play = $( this ).find('.fa').hasClass('fa-pause')
         $( this ).find('.fa').toggleClass('fa-pause', 'fa-start');
         if(PLACES_LIST.length===0){get_places_from_api()}
         else{
-            if(pause){USERS.live()}
-            else{USERS.wait()}
+            if(play){USERS.wait()}
+            else{USERS.live()}
         }
     })
 

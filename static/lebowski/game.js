@@ -1,11 +1,13 @@
-function json_to_log(data){
-    var bl = data.data.bl, sz_to_bl = bl.data.tranceive;
-    bl.data = bl.data.receive;    
-    delete data.data.bl    
-    add_log_element('sz-bl', sz_to_bl)    
-    add_log_element('bl', bl)
-    add_log_element('sz-client', data)
-    return bl.status
+function json_to_log(response){  
+    if(response.data.bl){
+        var bl = response.data.bl, sz_to_bl = bl.data.tranceive;
+        bl.data = bl.data.receive;    
+        delete response.data.bl
+        add_log_element('sz-bl', sz_to_bl)    
+        add_log_element('bl', bl)
+    }
+    add_log_element('sz-client', response)
+    return (bl==undefined) ? response.meta.code : bl.status
 }
 
 
@@ -36,17 +38,22 @@ TOWERS = {
     },
     created:function(){
         return TOWERS.list.filter(function(t){return t.is_create})
-    }
-
+    },
+    update:function(places_data){
+        places_data.forEach(function(obj){
+            var d = obj.place, p = TOWERS.list.filter(function(p){return p.location.lat==d.latitude&&p.location.lng==d.longitude})[0]
+            if(p) p.update(d)
+        });
+    },
 }
 function newTower(name, location){    
     var tower = {
         name:name, 
         location:location, 
         users:[], 
-        /*is_create: false,*/
         is_create: true,
-        level:'-'
+        level:'-',
+        cls: 'unknown',
     }
     var box = get_clear_boxes().filter(function(b){
         return (location.lat>=b.lat&&location.lat<=b.lat+BOX_STEP&&location.lng>=b.lng&&location.lng<=b.lng+BOX_STEP)
@@ -55,7 +62,7 @@ function newTower(name, location){
     tower.box = box[0]
     tower.id = 'tower_' + (TOWERS.list.length + 1)
     if( $("#"+tower.id).length ) return 
-    var el =  '<div id="' + tower.id  + '" class="map-obj place place-unknown">' + 
+    var el =  '<div id="' + tower.id  + '" class="map-obj place place-'+tower.cls+'">' + 
                 '<div class="obj-circle"></div>' + 
                 '<i class="fa fa-flag " ></i>' + 
               '</div>';
@@ -83,11 +90,15 @@ function newTower(name, location){
     tower.push_users = function(){
         $( "#place-userslist" ).empty();
         for (var i = tower.users.length - 1; i >= 0; i--) {$( "#place-userslist" ).append(get_user_li_elemets(userlist[i], true)) };
-    }     
-    function create_in_db(){
-        //
     }
-    /*add_log_element('client', 'Create a new Tower "' + tower.name +'"')*/
+    tower.update =function(data){
+        tower.el.removeClass('place-'+tower.cls)
+        if(tower.cls=='unknown'){
+            tower.cls = 'nobody'
+            tower.bd_id = data.id
+        }
+        tower.el.addClass('place-'+tower.cls)
+    }
     return tower
 }
 
@@ -127,16 +138,22 @@ function newUser(params){
     
     function _explore(){
         var params = {
-            radius : user.radius,
-            latitude : user.box.lat + BOX_STEP*get_random_float(), 
-            latitude : user.box.lng + BOX_STEP*get_random_float() ,
+            radius    : user.radius,
+            latitude  : user.box.lat + BOX_STEP*get_random_float(), 
+            longitude : user.box.lng + BOX_STEP*get_random_float(),
+            email     : user.email
         }
-        //explore code here//
+        add_log_element('client-sz', params)
+        $.getJSON(API.places.places_explore_in_venues, params, function(response){
+            status = json_to_log(response)
+            TOWERS.update(response.data.places)
+        })        
     }
     function _message(){
         var dev = 200;
         if((Date.now() - user.lastMessage) < ( get_random_num(1000+dev, 1000-dev)*360/user.activity ) ) return
-
+        user.lastMessage = Date.now();
+        if(!TOWERS.list.length) return
         _explore()
 
         //send message code here//
@@ -152,7 +169,6 @@ function newUser(params){
         _message_animate(target)
         _message_animate(user)
 
-        user.lastMessage = Date.now();
     }
     user.live = function(){
         //move on one box with speed user.speed*1000/60
@@ -165,15 +181,6 @@ function newUser(params){
             user.live();
         })
     }
-/*    user.remove = function(){
-        user.el.remove()
-        for (var i = USERS.list.length - 1; i >= 0; i--) {
-            if(USERS.list[i]==user){
-                USERS.list.splice(i,1)
-                break
-            }
-        };
-    }*/
     function _create_element(){
         user.id = 'user_' + (USERS.list.length + 1)
         var el =  '<div id="' + user.id  + '" class="map-obj user user-' + user.race[0] + '">' + 
@@ -196,8 +203,8 @@ function newUser(params){
             csrfmiddlewaretoken : CSRF
         }
         add_log_element('client-sz', params)
-        $.post(API.user.users_registration, params, function( data ) { 
-            status = json_to_log(data)            
+        $.post(API.user.users_registration, params, function( response ) { 
+            status = json_to_log(response)            
             /*if(status!=200) return*/
             _create_element()            
             user.lastMessage = Date.now();
@@ -233,17 +240,20 @@ function newBox(x,y){
 
 
 function build_map(){
+    $("#screen-overflow h1").text('Set map');
+    $("#screen-overflow").show();
+    get_box_step();
+    get_box_size();
     MAP = new Array;
     for (var x=0; x <= BOX_VALUE-1; x++) {
-        for (var y=0; y <= BOX_VALUE-1; y++) {
-            var box = newBox(x, y);
-            MAP.push(box);
-        }
+        for (var y=0; y <= BOX_VALUE-1; y++) {MAP.push(newBox(x, y)); }
     };
+    $("#screen-overflow").hide();
 }
 
 
 function get_places_from_api(){
+    $("#screen-overflow h1").text('Load places');
     $("#screen-overflow").show();
     $.getJSON(API.test_mode.generate_places, function(response){
         response.data.venues.forEach(function(p){PLACES_LIST.push(p)});
@@ -254,6 +264,7 @@ function get_places_from_api(){
         })
         add_log_element('client', 'Create new ' + TOWERS.list.length +' towers on map')
         update_all_places_list();
+        document.getElementById('box-value-set').setAttribute('disabled')        
         $("#screen-overflow").hide();
     });
 }

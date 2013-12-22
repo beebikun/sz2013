@@ -112,15 +112,15 @@
                     <i class="fa fa-play"></i>
                 </button>
             </h2>
-            <section>
+            <section >
                 <span class="help-block">Количество клеток</span>
-                <fieldset disabled>
-                <div class="input-group">
-                  <input type="text" class="form-control" placeholder="15">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">Set</button>
-                  </span>                  
-                </div><!-- /input-group -->
+                <fieldset id="box-value-set">
+	                <div class="input-group" >
+	                  <input type="text" class="form-control" value="15">
+	                  <span class="input-group-btn">
+	                    <button class="btn btn-default" type="button">Set</button>
+	                  </span>                  
+	                </div>
                 </fieldset>
             </section>
             <section>
@@ -203,12 +203,20 @@ function get_random_text(len) {
     return splice.join(' ')
 }
 var MAX_POSITION = 0.033;
-var BOX_VALUE = 15; //only odd
-var BOX_WIDTH = 0;
-var BOX_HEIGHT = 0;
-function get_box_width(){BOX_WIDTH = Math.floor(document.getElementById("map").getBoundingClientRect().width/BOX_VALUE); }
-function get_box_height(){BOX_HEIGHT = Math.floor(document.getElementById("map").getBoundingClientRect().height/BOX_VALUE); }
-var BOX_STEP = MAX_POSITION/BOX_VALUE;
+var BOX_VALUE ; //only odd
+var BOX_WIDTH;
+var BOX_HEIGHT;
+var BOX_STEP;
+
+function get_box_size(){
+	console.log(Math.floor(document.getElementById("map").getBoundingClientRect().width))
+	console.log(BOX_VALUE)
+	BOX_WIDTH = Math.round(document.getElementById("map").getBoundingClientRect().width/BOX_VALUE); 
+	BOX_HEIGHT = Math.round(document.getElementById("map").getBoundingClientRect().height/BOX_VALUE); 
+	console.log(BOX_WIDTH)
+}
+function get_box_step(){BOX_STEP = MAX_POSITION/BOX_VALUE;}
+
 
 var AUTORS_LIST = [
 	{cls:'client-sz',name:'Client', to:'SZ'},
