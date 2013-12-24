@@ -1,10 +1,14 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.utils import timezone
 
 from .models import RegistrationProfile
 from lebowski.api.views.users import UsersCreate as lebowski_create_user
 
 def activate_user(user):
+    print timezone.now
+    user.date_confirm = timezone.now()
+    user.save()
     return lebowski_create_user().create({u'email': user.email})        
 
 def index(request):

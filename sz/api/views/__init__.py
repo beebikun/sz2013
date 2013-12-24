@@ -58,7 +58,7 @@ class ApiRoot(SzApiView):
                 'generate_places': reverse('generate-places', request=request),
                 'testmode_places': reverse('testmode-places', request=request),
             },
-            'places':{
+            'place':{
                 'places_news': reverse('place-news', request=request),
                 'places_search_in_venues': reverse('place-search-in-venues', request=request),
                 'places_explore_in_venues': reverse('place-explore-in-venues', request=request),            
@@ -69,11 +69,13 @@ class ApiRoot(SzApiView):
                 'logout': reverse('auth-logout', request=request),
                 'current_user': reverse('auth-user', request=request),
                 'users_registration': reverse('users-registration', request=request),            
+                # 'users-resending-activation-key': reverse('users-resending-activation-key', request=request),
+                # 'users-profile': reverse('users-profile', request=request),
             },
-            'messages_previews': reverse('message-preview-list', request=request),
+            'message':{
+                'messages_previews': reverse('message-preview-list', request=request),            
+                # 'messages-search': reverse('message-search', request=request),
+            },
             # 'city-nearest': reverse('city-nearest', request=request),
-            # 'messages-search': reverse('message-search', request=request),
-            # 'users-resending-activation-key': reverse('users-resending-activation-key', request=request),
-            # 'users-profile': reverse('users-profile', request=request),
         })
 

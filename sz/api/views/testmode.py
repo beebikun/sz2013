@@ -42,7 +42,7 @@ class GeneratePlaces(SzApiView):
             for p in shelve.open('generated_place.shelve')['venues']:
                 model_p.filter(**get_params(p)).delete()
             del shelve.open('generated_place.shelve')['venues']                
-        list_len = request.QUERY_PARAMS.get('count', 100)
+        list_len = int(request.QUERY_PARAMS.get('count', 100))        
         data = map(place_serializers, generate_places(list_len=list_len))
         shelve.open('generated_place.shelve')['venues'] = data
         return sz_api_response.Response({'venues':data}) 

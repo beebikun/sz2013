@@ -39,9 +39,8 @@ class PlaceVenueExplore(SzApiView):
     def get(self, request,format=None):
     	params = self.validate_and_get_params(
             forms.PlaceExploreRequestForm, request.QUERY_PARAMS)
-        params[u'creator'] = request.user.email    
-        if LEBOWSKI_MODE_TEST:
-            params[u'creator'] = request.QUERY_PARAMS.get('email')
+        params[u'creator'] = request.user.email  if not LEBOWSKI_MODE_TEST \
+            else request.QUERY_PARAMS.get('email')        
         place_response =  map(self._serialize_item, 
             place_service.explore_in_venues(**params))
         data = dict(places = place_response)

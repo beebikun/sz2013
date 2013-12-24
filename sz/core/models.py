@@ -154,8 +154,6 @@ class Category(models.Model):
         verbose_name = _('category')
         verbose_name_plural = _('categories')
 
-# class MyTest(models.Model):
-# 	name = models.CharField(max_length=32)
 
 class Stem(models.Model):
 
@@ -233,7 +231,7 @@ class User(AbstractBaseUser):
         _('date joined'), default=timezone.now
     )
     date_confirm = models.DateTimeField(
-        _('date confirmation'), default=timezone.now
+        _('date confirmation'), default=None, blank=True, null=True
     )
 
     objects = UserManager()    

@@ -114,14 +114,16 @@
                 </button>
             </h2>
             <section >
-                <span class="help-block">Количество клеток</span>
                 <fieldset id="box-value-set">
+	                <span class="help-block">Количество клеток</span>
 	                <div class="input-group" >
 	                  <input type="text" class="form-control" value="15">
 	                  <span class="input-group-btn">
-	                    <button class="btn btn-default" type="button">Set</button>
+	                    <button class="btn btn-default" type="button" id="box-value-set-btn">Set</button>
 	                  </span>                  
 	                </div>
+	                <span class="help-block">Количество мест</span>
+	                <input type="text" class="form-control" value="100" id="place-value">
                 </fieldset>
             </section>
 
@@ -183,10 +185,13 @@
                 <h5>Main</h5>
                 <p id="user-email">E-mail: <span></span></p>
                 <p id="user-radius">Radius: <span></span></p>
+                <p id="user-activity">Activity: <span></span></p>
+                <p id="user-speed">Speed: <span></span></p>
                 <div class="settings-location">
                     <p>Lng: <span></span></p>
                     <p>Lat: <span></span></p>
                 </div>
+                <button type="button" class="margin-btm-sm btn btn-default btn-sm btn-block disabled" >Explore</button>
             </section>
             <section id="user-new-message">
             	<h5>New message</h5>

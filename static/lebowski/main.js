@@ -141,14 +141,15 @@ $( document ).ready(function() {
         $(s).tinyscrollbar();
     });
     set_api();
-    $("#box-value-set button").click(function(){        
+    
+    $("#box-value-set-btn").click(function(){        
         if(MAP) MAP.forEach(function(box){box.el.remove();})
         var val = $("#box-value-set input").val() || 15;
         if(val%2===0) var val = val - 1;
         BOX_VALUE = val;        
         set_size();
     });
-    $("#box-value-set button").click();
+    $("#box-value-set-btn").click();
 
     $( window ).scrollTop(0)
     

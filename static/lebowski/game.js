@@ -318,7 +318,8 @@ function build_map(){
 function get_places_from_api(){
     $("#screen-overflow h1").text('Load places');
     $("#screen-overflow").show();
-    $.getJSON(API.test_mode.generate_places, function(response){
+    var count = parseInt($("#place-value").val()) || 100;
+    $.getJSON(API.test_mode.generate_places,{count:count}, function(response){
         response.data.venues.forEach(function(p){PLACES_LIST.push(p)});
         TOWERS.list = new Array;
         PLACES_LIST.forEach(function(p){
