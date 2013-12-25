@@ -16,8 +16,7 @@ class UsersCreate(ProjectApiView):
             user = serializer.object['user']
             user_data = serializers.UserBigLSerializer(instance=user).data
             engine_data = posts.users_create(user_data)
-            user.is_in_engine = True
-            user.save()
+            user.create_in_engine()
             return engine_data
         return {"data":serializer.errors, "status": status.HTTP_400_BAD_REQUEST}
 

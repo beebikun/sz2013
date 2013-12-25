@@ -115,8 +115,7 @@ class Face(models.Model):
         processors=[processors.ResizeToFit(150, 150), ], options={'quality': 85}
     )
     def __unicode__(self):
-        race_name = self.race and self.race.name or 'all'
-        return u"%s_%s" % (self.emotion, race_name)
+        return u"%s_%s" % (self.emotion, self.race.name if self.race else 'all')
 
     class Meta:
         verbose_name = _('face')
@@ -253,6 +252,10 @@ class User(AbstractBaseUser):
     	# Overcode standart django methods
         # The user is identified by their email address
         return self.email
+
+    def create_in_engine(self):
+        self.is_in_engine = True
+        self.save()
 
     def __unicode__(self):
         return self.email
@@ -424,10 +427,14 @@ class Place(models.Model):
     def get_string_date(self):
         return get_string_date(self.date_is_active)
 
+    def create_in_engine(self):
+        self.is_in_engine = True
+        self.save()
+
     def __unicode__(self):
         return u"%s" % self.name + (self.address and (u", %s" % self.address) or u"")
-
     class Meta:
+        unique_together = ('position', 'name',)
         verbose_name = _('place')
         verbose_name_plural = _('places')
         ordering = ("name",)
